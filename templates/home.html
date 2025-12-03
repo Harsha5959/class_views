@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table border="2">
+        <tr>
+            <th>Employee_Name</th>
+            <th>Employee_Id</th>
+            <th>Employee_Email</th>
+            <th>Action</th>
+        </tr>
+        {% for x in data %}
+        <tr>
+            <td>{{x.emp_name}}</td>
+            <td>{{x.emp_id}}</td>
+            <td>{{x.emp_email}}</td>
+            <td>
+                <a href="{% url 'del_emp' x.id %}" onclick=" return confirm('Are You Sure to Delete')">DELETE</a>
+                <a href="{% url 'update_emp' x.id %}">EDIT</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <button><a href="{% url 'add_emp' %}">ADD</a></button>
+</body>
+</html>

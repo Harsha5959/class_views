@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+import os 
 
 from pathlib import Path
 
@@ -21,12 +22,18 @@ TEMPLATES_DIR = BASE_DIR/'templates'
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-h87)1gig89_w1n*j=2s**h##q%_6mn)k&wkb4d@*ua19n@y5-f'
+# SECRET_KEY = 'django-insecure-h87)1gig89_w1n*j=2s**h##q%_6mn)k&wkb4d@*ua19n@y5-f'
+
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "django-insecure-h87)1gig89_w1n*j=2s**h##q%_6mn)k&wkb4d@*ua19n@y5-f"
+)
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -81,32 +88,55 @@ WSGI_APPLICATION = 'class_views_project.wsgi.application'
 #     }
 # }
 
-import os 
-if os.environ.get("RENDER"): 
-    # Production (Render + Railway MySQL) 
-    DATABASES = { 
-        "default": { 
-            "ENGINE": "django.db.backends.mysql", 
-            "NAME": os.environ.get("MYSQLDATABASE"), 
-            "USER": os.environ.get("MYSQLUSER"), 
-            "PASSWORD": os.environ.get("MYSQLPASSWORD"), 
-            "HOST": os.environ.get("MYSQLHOST"), 
-            "PORT": os.environ.get("MYSQLPORT", "3306"), 
-        } 
-    } 
+# if os.environ.get("RENDER"): 
+#     # Production (Render + Railway MySQL) 
+#     DATABASES = { 
+#         "default": { 
+#             "ENGINE": "django.db.backends.mysql", 
+#             "NAME": os.environ.get("MYSQLDATABASE"), 
+#             "USER": os.environ.get("MYSQLUSER"), 
+#             "PASSWORD": os.environ.get("MYSQLPASSWORD"), 
+#             "HOST": os.environ.get("MYSQLHOST"), 
+#             "PORT": os.environ.get("MYSQLPORT", "3306"), 
+#         } 
+#     } 
 
-else: 
-    # Local development 
-    DATABASES = { 
-        "default": { 
-            "ENGINE": "django.db.backends.mysql", 
-            "NAME": "college_database", 
-            "USER": "root", 
-            "PASSWORD": "", 
-            "HOST": "localhost", 
-            "PORT": "3308", 
-        } 
-    } 
+# else: 
+#     # Local development 
+#     DATABASES = { 
+#         "default": { 
+#             "ENGINE": "django.db.backends.mysql", 
+#             "NAME": "college_database", 
+#             "USER": "root", 
+#             "PASSWORD": "", 
+#             "HOST": "localhost", 
+#             "PORT": "3308", 
+#         } 
+#     } 
+
+if os.environ.get("RENDER"):
+    # Production: Render + MySQL
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": os.environ.get("MYSQLDATABASE"),
+            "USER": os.environ.get("MYSQLUSER"),
+            "PASSWORD": os.environ.get("MYSQLPASSWORD"),
+            "HOST": os.environ.get("MYSQLHOST"),
+            "PORT": os.environ.get("MYSQLPORT", "3306"),
+        }
+    }
+
+else:
+    # Local development: simple SQLite file
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+
+
 
 
 # Password validation
